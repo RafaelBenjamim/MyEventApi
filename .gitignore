@@ -1,0 +1,19 @@
+# Build
+bin/
+obj/
+
+# Arquivos de usuário
+*.user
+*.suo
+
+# Config local
+appsettings.Development.json
+appsettings.json
+
+# Secrets
+secrets.json
+.env
+.env.*
+
+# Logs
+*.log

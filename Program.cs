@@ -8,6 +8,7 @@ using MyEventApi.Core.Interfaces;
 using MyEventApi.Infrastructure.Data;
 using MyEventApi.Infrastructure.Repository;
 using MyEventApi.Infrastructure.Services;
+using Resend;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,12 +60,18 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 // Infrastructure Services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IEmailService, ResendEmailService>();
 
 // Payment Gateways
 builder.Services.AddHttpClient<InfinitePayPaymentGateway>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["InfinitePay:BaseUrl"]
         ?? throw new InvalidOperationException("InfinitePay:BaseUrl não configurado."));
+});
+
+builder.Services.AddResend(options =>
+{
+    options.ApiToken = builder.Configuration["Resend:ApiKey"];
 });
 
 builder.Services.AddScoped<InfinitePayPaymentGateway>(sp =>
@@ -83,6 +90,7 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IRegistrationService, RegistrationService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
+builder.Services.AddScoped<IEmailLogRepository, EmailLogRepository>();
 
 // Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -111,7 +119,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();

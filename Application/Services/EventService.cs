@@ -87,5 +87,53 @@ namespace MyEventApi.Application.Services
                 ImageUrl = e.ImageUrl
             });
         }
+
+        public async Task UpdateEvent(Guid eventId, UpdateEventRequestDto request)
+        {
+            var eventEntity = await _eventRepository.GetById(eventId);
+
+            if (eventEntity is null)
+                throw new InvalidOperationException("Evento não encontrado.");
+
+            eventEntity.Title = request.Title;
+            eventEntity.Description = request.Description;
+            eventEntity.Date = DateTime.SpecifyKind(request.Date, DateTimeKind.Utc);
+            eventEntity.Price = request.Price;
+            eventEntity.MaxAttendees = request.MaxAttendees;
+            eventEntity.Location = request.Location;
+            eventEntity.ImageUrl = request.ImageUrl;
+
+            await _eventRepository.UpdateEvent(eventEntity);
+        }
+
+        public async Task DeleteEvent(Guid eventId)
+        {
+            var eventEntity = await _eventRepository.GetById(eventId);
+            if (eventEntity is null)
+                throw new InvalidOperationException("Evento não encontrado.");
+
+            await _eventRepository.DeleteEvent(eventId);
+        }
+
+        public async Task<EventResponseDto> GetEventById(Guid eventId)
+        {
+            var FindEvent = await _eventRepository.GetById(eventId);
+
+            if (FindEvent == null)
+                throw new InvalidOperationException("Evento não encontrado");
+
+            return new EventResponseDto
+            {
+                Title = FindEvent.Title,
+                Description = FindEvent.Description,
+                Date = FindEvent.Date,
+                Price = FindEvent.Price,
+                MaxAttendees = FindEvent.MaxAttendees,
+                Location = FindEvent.Location,
+                ImageUrl = FindEvent.ImageUrl
+                
+            };
+
+        }
     }
 }

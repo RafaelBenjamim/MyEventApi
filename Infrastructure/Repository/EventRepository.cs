@@ -37,16 +37,31 @@ namespace MyEventApi.Infrastructure.Repository
             return await _context.Events.FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public Task<IEnumerable<EventEntity>> GetAllEventsByStore(string storeSlug)
+        public async Task<IEnumerable<EventEntity>> GetAllEventsByStore(string storeSlug)
         {
             var now = DateTime.UtcNow;
 
-            return _context.Events
+            return await _context.Events
             .Include(e => e.Registrations)
             .Where(e => e.Store.Slug == storeSlug && e.Date >= now)
             .OrderBy(e => e.Date)
-            .ToListAsync()
-            .ContinueWith(t => (IEnumerable<EventEntity>)t.Result);
+            .ToListAsync();
+        }
+
+        public async Task UpdateEvent(EventEntity eventEntity)
+        {
+            _context.Events.Update(eventEntity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteEvent(Guid eventId)
+        {
+            var eventEntity = await _context.Events.FirstOrDefaultAsync(e => e.Id == eventId);
+            if (eventEntity != null)
+            {
+                _context.Events.Remove(eventEntity);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -2,6 +2,8 @@
 using MyEventApi.Core.Entities;
 using MyEventApi.Core.Enums;
 using MyEventApi.Core.Interfaces;
+using MyEventApi.Infrastructure.Repository;
+using System.Diagnostics;
 
 namespace MyEventApi.Application.Services
 {
@@ -9,13 +11,19 @@ namespace MyEventApi.Application.Services
     {
         private readonly IRegistrationRepository _registrationRepository;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IEmailService _emailService;
+        private readonly IEventRepository _eventRepository;
 
         public PaymentService(
             IRegistrationRepository registrationRepository,
-            IPaymentRepository paymentRepository)
+            IPaymentRepository paymentRepository,
+            IEmailService emailService,
+            IEventRepository eventRepository)
         {
             _registrationRepository = registrationRepository;
             _paymentRepository = paymentRepository;
+            _emailService = emailService;
+            _eventRepository = eventRepository;
         }
 
         public async Task HandleWebhook(PaymentWebhookRequestDto request)
@@ -44,6 +52,24 @@ namespace MyEventApi.Application.Services
                     ConfirmedAt = DateTime.UtcNow
                 };
                 await _paymentRepository.AddPayment(payment);
+
+            var eventDetails = await _eventRepository.GetById(registration.EventId);
+
+            if(eventDetails is not null)
+            {
+                var FormatedDate = eventDetails.Date.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("pt-BR"));
+
+                await _emailService.SendPaymentConfirmation(
+                email: registration.Email,
+                name: registration.Name,
+                eventTitle: eventDetails.Title,
+                eventDate: FormatedDate,
+                eventLocation: eventDetails.Location ?? "A confirmar",
+                registrationId: registration.Id.ToString(),
+                eventPrice: eventDetails.Price
+            );
+            }
+
         }
     }
 }

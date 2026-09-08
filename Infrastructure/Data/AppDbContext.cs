@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyEventApi.Core.Entities;
+using MyEventApi.Core.Entity;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
@@ -12,6 +13,7 @@ namespace MyEventApi.Infrastructure.Data
         public DbSet<EventEntity> Events { get; set; }
         public DbSet<RegistrationEntity> Registrations { get; set; }
         public DbSet<PaymentEntity> Payments { get; set; }
+        public DbSet<EmailLogEntity> EmailLogs { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

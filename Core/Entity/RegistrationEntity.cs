@@ -1,5 +1,7 @@
 ﻿using MyEventApi.Core.Entities;
+using MyEventApi.Core.Entity;
 using MyEventApi.Core.Enums;
+using MyEventApi.Infrastructure.Repository;
 
 namespace MyEventApi.Core.Entities
 {     
@@ -17,5 +19,7 @@ namespace MyEventApi.Core.Entities
 
         public EventEntity Event { get; set; } = null!;
         public PaymentEntity? Payment { get; set; }
+
+        public ICollection<EmailLogEntity> EmailLogs { get; set; } = new List<EmailLogEntity>();
     }
 }

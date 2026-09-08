@@ -66,8 +66,32 @@ namespace MyEventApi.Application.Services
             };
         }
 
+        public async Task<ReturnRegistrationWithEventDto> GetConfirmationEvent(Guid id)
+        {
+            var registration = await _registrationRepository.GetbyIdWithEvent(id);
 
+            if (registration == null)
+                throw new InvalidOperationException("Inscrição não encontrada!");
 
+            return new ReturnRegistrationWithEventDto
+            {
+                Id = registration.Id,
+                Name = registration.Name,
+                Title = registration.Event.Title,
+                Date = registration.Event.Date,
+                Location = registration.Event.Location,
+                Status = registration.Status
+            };
+        }
 
+        public async Task<List<UserRegistrationDto>> GetRegistrationsByEvent(Guid eventId)
+        {
+            var registration = await    _registrationRepository.GetRegistrationsByEvent(eventId);
+
+            if(registration == null)
+                throw new InvalidOperationException("Esse evento ainda não possui nenhuma inscrição!");
+            
+            return registration;
+        }
     }
 }

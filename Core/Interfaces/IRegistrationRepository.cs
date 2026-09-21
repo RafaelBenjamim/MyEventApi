@@ -11,5 +11,6 @@ namespace MyEventApi.Core.Interfaces
         Task<RegistrationEntity?> GetById(Guid id);
         Task<RegistrationEntity> GetbyIdWithEvent(Guid id);
         Task<List<UserRegistrationDto>> GetRegistrationsByEvent(Guid Id);
+        Task<bool> IsMemberFiorella(string email);
     }
 }

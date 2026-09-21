@@ -7,5 +7,6 @@
         public DateTime Date { get; set; }
         public decimal Price { get; set; }
         public int MaxAttendees { get; set; }
+        public decimal? DiscountPercentage { get; set; }
     }
 }

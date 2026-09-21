@@ -16,6 +16,9 @@ namespace MyEventApi.Core.Entities
         public ERegistrationStatus Status { get; set; } = ERegistrationStatus.Pending;
         public string? ExternalPaymentId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public bool HasDiscount { get; set; } = false;
+        public decimal DiscountPercentage { get; set; }
+        public decimal FinalPrice { get; set; }
 
         public EventEntity Event { get; set; } = null!;
         public PaymentEntity? Payment { get; set; }

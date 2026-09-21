@@ -10,5 +10,7 @@ namespace MyEventApi.Core.Dtos
         public string Name { get; set; } = string.Empty;
         public ERegistrationStatus Status { get; set; }
         public string PaymentUrl { get; set; } = string.Empty;
+        public bool HasDiscount { get; set; }
+        public decimal FinalPrice { get; set; }
     }
 }

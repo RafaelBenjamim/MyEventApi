@@ -41,6 +41,22 @@ namespace MyEventApi.Application.Services
             if (store.PaymentProvider is null)
                 throw new InvalidOperationException("Esta loja ainda não configurou um método de pagamento.");
 
+             
+
+            var hasDiscount = false;
+            var finalPrice = eventEntity.Price;
+
+            if (eventEntity.DiscountPercentage !=  null )
+            {
+                var returnCustomer = await _registrationRepository.IsMemberFiorella(request.Email);
+
+                if (returnCustomer != null) 
+                {
+                    hasDiscount = true;
+                    var discount = eventEntity.Price * (eventEntity.DiscountPercentage / 100);
+                    finalPrice = eventEntity.Price - discount;
+                }
+            }
 
             var registration = new RegistrationEntity
             {
@@ -49,12 +65,15 @@ namespace MyEventApi.Application.Services
                 Name = request.Name,
                 Email = request.Email,
                 Phone = request.Phone,
-                Status = ERegistrationStatus.Pending
+                Status = ERegistrationStatus.Pending,
+                HasDiscount = hasDiscount,
+                DiscountPercentage = hasDiscount ? eventEntity.DiscountPercentage : 0,
+                FinalPrice = finalPrice
             };
             await _registrationRepository.addRegistration(registration);
 
             var gateway = _gatewayFactory.GetGateway(store.PaymentProvider.Value);
-            var charge = await gateway.CreateCharge(store, eventEntity.Price, eventEntity.Title, registration.Id, request.Name, request.Email, request.Phone);
+            var charge = await gateway.CreateCharge(store, finalPrice, eventEntity.Title, registration.Id, request.Name, request.Email, request.Phone);
 
             return new RegistrationResponseDto
             {
@@ -65,7 +84,6 @@ namespace MyEventApi.Application.Services
                 PaymentUrl = charge.PaymentUrl
             };
         }
-
         public async Task<ReturnRegistrationWithEventDto> GetConfirmationEvent(Guid id)
         {
             var registration = await _registrationRepository.GetbyIdWithEvent(id);

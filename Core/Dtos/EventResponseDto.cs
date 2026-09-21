@@ -10,6 +10,7 @@
         public int MaxAttendees { get; set; }
         public int RegisteredCount { get; set; }
         public string? Location { get; set; }    
-        public string? ImageUrl { get; set; }    
+        public string? ImageUrl { get; set; }
+        public decimal? DiscountPercentage { get; set; }
     }
 }

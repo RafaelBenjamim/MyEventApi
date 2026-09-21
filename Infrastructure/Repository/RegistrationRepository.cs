@@ -56,5 +56,14 @@ namespace MyEventApi.Infrastructure.Repository
                 })
                 .ToListAsync();
         }
+
+        public async Task<bool> IsMemberFiorella(string email)
+        {
+            return await _context.Registrations
+                .Include(r => r.Event) 
+                .AnyAsync(r => r.Email == email
+                           && r.Status == ERegistrationStatus.Confirmed
+                           && r.Event.Date < DateTime.UtcNow); 
+        }
     }
 }

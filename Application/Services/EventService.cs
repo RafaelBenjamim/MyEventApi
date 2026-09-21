@@ -65,6 +65,7 @@ namespace MyEventApi.Application.Services
                 Description = eventEntity.Description,
                 Date = eventEntity.Date,
                 Price = eventEntity.Price,
+                DiscountPercentage = eventEntity.DiscountPercentage,
                 MaxAttendees = eventEntity.MaxAttendees,
                 RegisteredCount = registeredCount
             };
@@ -81,6 +82,7 @@ namespace MyEventApi.Application.Services
                 Description = e.Description,
                 Date = e.Date,
                 Price = e.Price,
+                DiscountPercentage = e.DiscountPercentage,
                 MaxAttendees = e.MaxAttendees,
                 RegisteredCount = e.Registrations.Count(r => r.Status != ERegistrationStatus.Cancelled),
                 Location = e.Location,
@@ -102,6 +104,7 @@ namespace MyEventApi.Application.Services
             eventEntity.MaxAttendees = request.MaxAttendees;
             eventEntity.Location = request.Location;
             eventEntity.ImageUrl = request.ImageUrl;
+            eventEntity.DiscountPercentage = request.DiscountPercentage;
 
             await _eventRepository.UpdateEvent(eventEntity);
         }
@@ -128,6 +131,7 @@ namespace MyEventApi.Application.Services
                 Description = FindEvent.Description,
                 Date = FindEvent.Date,
                 Price = FindEvent.Price,
+                DiscountPercentage = FindEvent.DiscountPercentage,
                 MaxAttendees = FindEvent.MaxAttendees,
                 Location = FindEvent.Location,
                 ImageUrl = FindEvent.ImageUrl

@@ -24,7 +24,10 @@ builder.Services.AddCors(option =>
 {
     option.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "https://fiorella-club.vercel.app").AllowAnyHeader().AllowAnyMethod();
+        policy.WithOrigins("" +
+            "http://localhost:5173", 
+            "https://fiorellaclub.com.br"
+            ).AllowAnyHeader().AllowAnyMethod();
     });
 });
 

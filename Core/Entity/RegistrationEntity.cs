@@ -19,6 +19,8 @@ namespace MyEventApi.Core.Entities
         public bool HasDiscount { get; set; } = false;
         public decimal DiscountPercentage { get; set; }
         public decimal FinalPrice { get; set; }
+        public bool AgreedToTerms { get; set; }
+
 
         public EventEntity Event { get; set; } = null!;
         public PaymentEntity? Payment { get; set; }

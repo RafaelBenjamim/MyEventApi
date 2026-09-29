@@ -68,7 +68,8 @@ namespace MyEventApi.Application.Services
                 Status = ERegistrationStatus.Pending,
                 HasDiscount = hasDiscount,
                 DiscountPercentage = hasDiscount ? eventEntity.DiscountPercentage : 0,
-                FinalPrice = finalPrice
+                FinalPrice = finalPrice,
+                AgreedToTerms = request.AgreedToTerms
             };
             await _registrationRepository.addRegistration(registration);
 

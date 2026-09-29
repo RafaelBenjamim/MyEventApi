@@ -66,7 +66,7 @@ namespace MyEventApi.Application.Services
                 eventDate: FormatedDate,
                 eventLocation: eventDetails.Location ?? "A confirmar",
                 registrationId: registration.Id.ToString(),
-                eventPrice: eventDetails.Price
+                eventPrice: registration.FinalPrice
             );
             }
 
